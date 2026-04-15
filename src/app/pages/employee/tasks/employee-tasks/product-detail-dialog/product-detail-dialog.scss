@@ -1,0 +1,123 @@
+.dialog-container {
+  min-width: 500px;
+  max-width: 600px;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+
+  h2 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+    font-size: 24px;
+    font-weight: 500;
+
+    mat-icon {
+      color: #667eea;
+    }
+  }
+
+  button {
+    mat-icon {
+      color: #666;
+    }
+  }
+}
+
+mat-dialog-content {
+  padding: 24px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.product-details {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .detail-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      color: #667eea;
+    }
+  }
+
+  .detail-value {
+    padding-left: 26px;
+    font-size: 16px;
+    color: #333;
+    word-wrap: break-word;
+
+    mat-chip {
+      font-size: 14px;
+    }
+  }
+}
+
+.product-image {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  object-fit: contain;
+}
+
+mat-dialog-actions {
+  padding: 16px 24px;
+
+  button {
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 600px) {
+  .dialog-container {
+    min-width: auto;
+    width: 100%;
+  }
+
+  .dialog-header {
+    padding: 12px 16px;
+
+    h2 {
+      font-size: 20px;
+    }
+  }
+
+  mat-dialog-content {
+    padding: 16px;
+  }
+
+  .detail-value {
+    font-size: 14px;
+  }
+
+  mat-dialog-actions {
+    padding: 12px 16px;
+  }
+}

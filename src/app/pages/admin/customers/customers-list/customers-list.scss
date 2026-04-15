@@ -1,0 +1,21 @@
+.customers-container {
+  padding: 20px;
+}
+
+mat-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.customers-table {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.loading, .no-data {
+  text-align: center;
+  padding: 20px;
+  color: var(--mat-sys-on-surface-variant);
+}

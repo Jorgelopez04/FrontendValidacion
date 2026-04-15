@@ -1,0 +1,45 @@
+<div class="edit-area-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Editar Área</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      @if(isLoading){
+      <div class="loading">Cargando área...</div>
+      } @else {
+        <form [formGroup]="editForm">
+          <div class="readonly-info">
+            <div class="info-row">
+              <span class="label">Nombre actual:</span>
+              <span class="value">{{ area.name }}</span>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Nuevo nombre del área</mat-label>
+              <input matInput formControlName="name" placeholder="Ingrese el nuevo nombre">
+              @if(editForm.get('name')?.hasError('required')){
+                <mat-error>El nombre es obligatorio</mat-error>
+              }
+              @if(editForm.get('name')?.hasError('maxlength')){
+                <mat-error>Máximo 100 caracteres</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <div class="actions">
+            <button mat-button type="button" (click)="onCancel()" [disabled]="isSaving">
+              Cancelar
+            </button>
+            <button mat-raised-button color="primary" type="button" (click)="onSubmit()"
+              [disabled]="editForm.invalid || isSaving">
+              {{ isSaving ? 'Guardando...' : 'Guardar Cambios' }}
+            </button>
+          </div>
+        </form>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

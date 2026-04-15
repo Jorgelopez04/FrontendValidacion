@@ -1,0 +1,32 @@
+mat-nav-list {
+  padding: 12px;
+}
+
+a {
+  border-radius: 12px;
+  margin: 4px 0;
+  padding: 8px 12px;
+  color: var(--mat-sys-on-surface-variant);
+  transition: background-color 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    background-color: var(--mat-sys-surface-container-high);
+  }
+
+  mat-icon {
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+.active {
+  background-color: var(--mat-sys-primary-container);
+
+  mat-icon {
+    color: var(--mat-sys-primary);
+  }
+
+  span {
+    color: var(--mat-sys-on-primary-container);
+    font-weight: 600;
+  }
+}

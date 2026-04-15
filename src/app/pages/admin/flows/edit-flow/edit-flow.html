@@ -1,0 +1,63 @@
+<div class="edit-flow-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Editar Flujo</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      @if(isLoading){
+      <div class="loading">Cargando flujo...</div>
+      } @else{
+      <form [formGroup]="flowForm">
+        <div class="readonly-info">
+          <div class="info-row">
+            <span class="label">ID Flujo:</span>
+            <span class="value">{{ flow.id_flow }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Categoría:</span>
+            <span class="value">{{ flow.category.name }}</span>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Secuencia (Paso)</mat-label>
+            <input matInput type="number" formControlName="sequence" min="1">
+            @if(flowForm.get('sequence')?.hasError('required')){
+              <mat-error>La secuencia es requerida</mat-error>
+            }
+            @if(flowForm.get('sequence')?.hasError('min')){
+              <mat-error>Debe ser al menos 1</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Rol</mat-label>
+            <mat-select formControlName="id_role">
+              @for(role of roles; track role.id_role){
+                <mat-option>
+                {{ role.name }} - {{ role.area?.name }}
+              </mat-option>
+              }
+            </mat-select>
+            @if(flowForm.get('id_role')?.hasError('required')){
+              <mat-error>El rol es requerido</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="actions">
+          <button mat-button type="button" (click)="onCancel()" [disabled]="isSaving">
+            Cancelar
+          </button>
+          <button mat-raised-button color="primary" type="button" (click)="onSubmit()"
+            [disabled]="!flowForm.valid || isSaving">
+            {{ isSaving ? 'Guardando...' : 'Guardar Cambios' }}
+          </button>
+        </div>
+      </form>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

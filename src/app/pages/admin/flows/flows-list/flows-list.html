@@ -1,0 +1,59 @@
+<div class="flows-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Gestión de Flujos de Producción</mat-card-title>
+      <button mat-raised-button color="primary" (click)="createFlow()">
+        <mat-icon>add</mat-icon>
+        Crear Flujo
+      </button>
+    </mat-card-header>
+
+    <mat-card-content>
+      <table mat-table [dataSource]="flows" class="flows-table">
+        
+        <ng-container matColumnDef="id_flow">
+          <th mat-header-cell *matHeaderCellDef>ID</th>
+          <td mat-cell *matCellDef="let flow">{{ flow.id_flow }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="category">
+          <th mat-header-cell *matHeaderCellDef>Categoría</th>
+          <td mat-cell *matCellDef="let flow">{{ flow.category.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="sequence">
+          <th mat-header-cell *matHeaderCellDef>Paso</th>
+          <td mat-cell *matCellDef="let flow">{{ flow.sequence }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="role">
+          <th mat-header-cell *matHeaderCellDef>Rol</th>
+          <td mat-cell *matCellDef="let flow">{{ flow.role.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="area">
+          <th mat-header-cell *matHeaderCellDef>Área</th>
+          <td mat-cell *matCellDef="let flow">{{ flow.role.area?.name || 'N/A' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Acciones</th>
+          <td mat-cell *matCellDef="let flow">
+            <button mat-icon-button color="accent" (click)="editFlow(flow)">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      @if(isLoading){
+        <div class="loading">Cargando flujos...</div>
+      } @else if (!isLoading && flows.length === 0) {
+        <div class="no-data">No hay flujos registrados.</div>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

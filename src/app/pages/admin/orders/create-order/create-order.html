@@ -1,0 +1,141 @@
+<div class="create-order-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Crear Nuevo Pedido</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <mat-stepper linear #stepper>
+
+        <mat-step [stepControl]="orderForm" label="Información del Pedido">
+          <form [formGroup]="orderForm">
+            <div class="form-section">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Cliente</mat-label>
+                <input type="text" matInput [formControl]="customerSearchControl" [matAutocomplete]="auto"
+                  placeholder="Buscar cliente...">
+                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onCustomerSelected($event)"
+                  [displayWith]="displayCustomerName">
+                  @for(customer of filteredCustomers | async; track customer){
+                  <mat-option [value]="customer">
+                    {{ customer.name }}
+                  </mat-option>
+                  }
+                </mat-autocomplete>
+                @if(orderForm.get('id_customer')?.hasError('required')){
+                <mat-error>El cliente es requerido</mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Fecha Estimada de Entrega</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="estimated_delivery_date">
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                @if(orderForm.get('estimated_delivery_date')?.hasError('pastDate')){
+                <mat-error>La fecha debe ser hoy o posterior</mat-error>
+                }
+              </mat-form-field>
+            </div>
+
+            <div class="stepper-actions">
+              <button mat-button [disabled]="!orderForm.valid"
+                (click)="createOrderAndContinue(stepper)">Siguiente</button>
+            </div>
+          </form>
+        </mat-step>
+
+        <mat-step [stepControl]="productsForm" label="Agregar Productos">
+          <form [formGroup]="productsForm">
+            <div class="products-section">
+              <button mat-raised-button color="primary" type="button" (click)="addProduct()">
+                <mat-icon>add</mat-icon>
+                Agregar Producto
+              </button>
+
+              <div formArrayName="products" class="products-list">
+                @for(product of products.controls; track $index){
+                <mat-card [formGroupName]="$index" class="product-card">
+                  <mat-card-header>
+                    <mat-card-title>Producto {{ $index + 1 }}</mat-card-title>
+                    <button mat-icon-button color="warn" type="button" (click)="removeProduct($index)">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </mat-card-header>
+
+                  <mat-card-content>
+                    <div class="product-form">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Nombre del Producto</mat-label>
+                        <input matInput formControlName="name">
+                        @if(getProductGroup($index).get('name')?.hasError('required')){
+                          <mat-error>Requerido</mat-error>
+                        }
+                      </mat-form-field>
+
+                      <mat-form-field appearance="outline">
+                        <mat-label>Categoría</mat-label>
+                        <mat-select formControlName="id_category">
+                          @for(category of categories; track category.id_category){
+                            <mat-option [value]="category.id_category">
+                            {{ category.name }}
+                          </mat-option>
+                          }
+                        </mat-select>
+                        @if(getProductGroup($index).get('id_category')?.hasError('required')){
+                          <mat-error>Requerido</mat-error>
+                        }
+                      </mat-form-field>
+
+                      <mat-checkbox formControlName="customized">Personalizado</mat-checkbox>
+
+                      <mat-form-field appearance="outline">
+                        <mat-label>Tela</mat-label>
+                        <input matInput formControlName="fabric">
+                        @if(getProductGroup($index).get('fabric')?.hasError('required')){
+                          <mat-error>Requerido</mat-error>
+                        }
+                      </mat-form-field>
+
+                      <mat-form-field appearance="outline">
+                        <mat-label>Dimensiones</mat-label>
+                        <input matInput formControlName="dimensions">
+                      </mat-form-field>
+
+                      <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Descripción</mat-label>
+                        <textarea matInput formControlName="description" rows="3"></textarea>
+                      </mat-form-field>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+                }
+              </div>
+
+              @if(products.length === 0){
+                <div class="no-products"> No hay productos agregados. Haz clic en "Agregar Producto" para comenzar.</div>
+              }
+            </div>
+
+            <div class="stepper-actions">
+              <button mat-button matStepperPrevious>Anterior</button>
+              <button mat-button matStepperNext
+                [disabled]="products.length === 0 || productsForm.invalid">Siguiente</button>
+            </div>
+          </form>
+        </mat-step>
+
+
+        <mat-step [stepControl]="productsForm" label="Confirmar Pedido">
+          <div class="stepper-actions">
+            <button mat-button matStepperPrevious [disabled]="isSubmitting">Anterior</button>
+            <button mat-raised-button color="primary" (click)="onSubmit()"
+              [disabled]="!productsForm.valid || isSubmitting">
+              {{ isSubmitting ? 'Creando...' : 'Crear Pedido' }}
+            </button>
+          </div>
+        </mat-step>
+      </mat-stepper>
+    </mat-card-content>
+  </mat-card>
+</div>

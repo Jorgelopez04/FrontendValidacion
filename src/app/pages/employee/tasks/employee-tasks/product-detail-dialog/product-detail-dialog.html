@@ -1,0 +1,78 @@
+<div class="dialog-container">
+  <div class="dialog-header">
+    <h2 mat-dialog-title>
+      <mat-icon>inventory_2</mat-icon>
+      Detalle del Producto
+    </h2>
+    <button mat-icon-button (click)="onClose()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <mat-dialog-content>
+    <div class="product-details">
+      <div class="detail-item">
+        <div class="detail-label">
+          <mat-icon>label</mat-icon>
+          <span>Nombre</span>
+        </div>
+        <div class="detail-value">{{ product.name }}</div>
+      </div>
+
+
+      @if(product.description){
+      <div class="detail-item">
+        <div class="detail-label">
+          <mat-icon>description</mat-icon>
+          <span>Descripción</span>
+        </div>
+        <div class="detail-value">{{ product.description }}</div>
+      </div>
+      }
+
+      @if(product.dimensions){
+      <div class="detail-item">
+        <div class="detail-label">
+          <mat-icon>straighten</mat-icon>
+          <span>Dimensiones</span>
+        </div>
+        <div class="detail-value">{{ product.dimensions }}</div>
+      </div>
+      }
+
+      @if(product.fabric){
+      <div class="detail-item">
+        <div class="detail-label">
+          <mat-icon>texture</mat-icon>
+          <span>Tela</span>
+        </div>
+        <div class="detail-value">{{ product.fabric }}</div>
+      </div>
+      }
+
+      @if(product.ref_photo){
+        <div class="detail-item">
+        <div class="detail-label">
+          <mat-icon>image</mat-icon>
+          <span>Foto de Referencia</span>
+        </div>
+        <div class="detail-value">
+          <img [src]="product.ref_photo" [alt]="product.name" class="product-image">
+        </div>
+      </div>
+      }
+
+    </div>
+  </mat-dialog-content>
+
+  <mat-divider></mat-divider>
+
+  <mat-dialog-actions align="end">
+    <button mat-raised-button color="primary" (click)="onClose()">
+      <mat-icon>close</mat-icon>
+      Cerrar
+    </button>
+  </mat-dialog-actions>
+</div>

@@ -1,0 +1,98 @@
+<div class="edit-order-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Editar Pedido #{{ orderId }}</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      @if(isLoading){
+      <div class="loading">Cargando pedido...</div>
+      } @else {
+      <form [formGroup]="editForm">
+        <div class="form-section">
+          <h3>Información del Pedido</h3>
+
+          <div class="readonly-info">
+            <div class="info-row">
+              <span class="label">Cliente:</span>
+              <span class="value">{{ order.customer_name }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Estado:</span>
+              <span class="value">{{ order.state_name }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Fecha de Entrada:</span>
+              <span class="value">{{ order.entry_date }}</span>
+            </div>
+          </div>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Fecha Estimada de Entrega</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="estimated_delivery_date">
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            @if(editForm.get('estimated_delivery_date')?.hasError('required')){
+            <mat-error>La fecha es requerida</mat-error>
+            }
+
+          </mat-form-field>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="form-section">
+          <h3>Productos del Pedido</h3>
+          <p class="note">Solo puedes editar la tela, dimensiones y descripción de cada producto.</p>
+
+          <div formArrayName="products" class="products-list">
+            @for(product of products.controls; track $index){
+            <mat-card [formGroupName]="$index" class="product-card">
+              <mat-card-header>
+                <mat-card-title>{{ $index + 1 }}. {{ products.at($index).get('name')?.value }}</mat-card-title>
+              </mat-card-header>
+
+              <mat-card-content>
+                <div class="product-form">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Tela</mat-label>
+                    <input matInput formControlName="fabric">
+                    @if(product.get('fabric')?.hasError('required')){
+                      <mat-error>La tela es requerida</mat-error>
+                    }
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Dimensiones</mat-label>
+                    <input matInput formControlName="dimensions">
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Descripción</mat-label>
+                    <textarea matInput formControlName="description" rows="3"></textarea>
+                  </mat-form-field>
+                </div>
+              </mat-card-content>
+            </mat-card>
+            }
+
+          </div>
+        </div>
+
+
+        <div class="actions">
+          <button mat-button type="button" (click)="onCancel()" [disabled]="isSaving">
+            Cancelar
+          </button>
+          <button mat-raised-button color="primary" type="button" (click)="onSubmit()"
+            [disabled]="!editForm.valid || isSaving">
+            {{ isSaving ? 'Guardando...' : 'Guardar Cambios' }}
+          </button>
+        </div>
+      </form>
+      }
+
+
+    </mat-card-content>
+  </mat-card>
+</div>

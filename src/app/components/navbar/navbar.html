@@ -1,0 +1,17 @@
+<mat-toolbar color="primary">
+
+    <button mat-icon-button (click)="toggleSidebar()">
+
+        <mat-icon>menu</mat-icon>
+
+    </button>
+
+    <span class="greeting">{{ userName }}</span>
+    <span class="spacer"></span>
+
+    <button mat-button (click)="onLogout()">
+        <mat-icon>exit_to_app</mat-icon>
+        Salir
+    </button>
+
+</mat-toolbar>

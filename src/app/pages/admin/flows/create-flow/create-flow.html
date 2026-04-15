@@ -1,0 +1,66 @@
+<div class="create-flow-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Crear Nuevo Flujo</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      @if (isLoading) {
+      <div class="loading">Cargando dependencias...</div>
+      } @else {
+      <form [formGroup]="flowForm">
+        <div class="form-section">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Categoría</mat-label>
+            <mat-select formControlName="id_category">
+              @for(category of categories; track category.id_category){
+              <mat-option [value]="category.id_category">
+                {{ category.name }}
+              </mat-option>
+              }
+            </mat-select>
+            @if(flowForm.get('id_category')?.hasError('required')){
+            <mat-error>La categoría es requerida</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Rol</mat-label>
+            <mat-select formControlName="id_role">
+              @for(role of roles; track role.id_role){
+              <mat-option [value]="role.id_role">
+                {{ role.name }} - {{ role.area?.name }}
+              </mat-option>
+              }
+            </mat-select>
+            @if(flowForm.get('id_role')?.hasError('required')){
+              <mat-error>El rol es requerido</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Secuencia (Paso)</mat-label>
+            <input matInput type="number" formControlName="sequence" min="1" placeholder="Ej: 1, 2, 3...">
+            @if(flowForm.get('sequence')?.hasError('required')){
+              <mat-error>La secuencia es requerida</mat-error>
+            }
+            @if(flowForm.get('sequence')?.hasError('min')){
+              <mat-error>Debe ser al menos 1</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="actions">
+          <button mat-button type="button" (click)="onCancel()" [disabled]="isSaving">
+            Cancelar
+          </button>
+          <button mat-raised-button color="primary" type="button" (click)="onSubmit()"
+            [disabled]="!flowForm.valid || isSaving">
+            {{ isSaving ? 'Guardando...' : 'Crear Flujo' }}
+          </button>
+        </div>
+      </form>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

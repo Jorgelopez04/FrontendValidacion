@@ -1,0 +1,132 @@
+h2 {
+    margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-button {
+  margin-left: auto;
+}
+
+.order-info {
+  width: 100%;
+  max-width: 750px; 
+  max-height: 75vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 8px;
+  box-sizing: border-box; 
+}
+
+.info-section {
+  padding: 20px 0;
+
+  h3 {
+    margin-bottom: 16px;
+    color: var(--mat-sys-primary);
+  }
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+
+  .label {
+    font-weight: 500;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  .value {
+    color: var(--mat-sys-on-surface);
+  }
+}
+
+.loading, .no-products {
+  text-align: center;
+  padding: 20px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+mat-chip {
+  &.status-pendiente {
+    background-color: #ffc107;
+    color: #000;
+  }
+  
+  &.status-en-proceso {
+    background-color: #2196f3;
+    color: #fff;
+  }
+  
+  &.status-completado {
+    background-color: #4caf50;
+    color: #fff;
+  }
+
+  &.small-chip {
+    height: 24px;
+    font-size: 12px;
+  }
+}
+
+.products-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.product-card {
+  padding: 16px;
+  background-color: var(--mat-sys-surface-container-low);
+  border-radius: 8px;
+  border-left: 4px solid var(--mat-sys-primary);
+}
+
+.product-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+
+  h4 {
+    margin: 0;
+    color: var(--mat-sys-on-surface);
+  }
+}
+
+.product-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.detail-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+
+  .detail-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  .detail-label {
+    font-weight: 500;
+    color: var(--mat-sys-on-surface-variant);
+    min-width: 100px;
+  }
+
+  .detail-value {
+    color: var(--mat-sys-on-surface);
+  }
+}
+
+mat-dialog-content {
+  overflow-x: hidden; 
+  padding: 0 24px; 
+}

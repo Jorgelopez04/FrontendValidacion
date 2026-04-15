@@ -1,0 +1,34 @@
+<div class="create-area-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Crear Área</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="createForm">
+        <div class="form-section">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nombre del Área</mat-label>
+            <input matInput formControlName="name" placeholder="Ej: Producción, Marketing">
+            @if(createForm.get('name')?.hasError('required')){
+              <mat-error>El nombre es obligatorio</mat-error>
+            }
+            @if(createForm.get('name')?.hasError('maxlength')){
+              <mat-error>Máximo 100 caracteres</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="actions">
+          <button mat-button type="button" (click)="onCancel()" [disabled]="isSaving">
+            Cancelar
+          </button>
+          <button mat-raised-button color="primary" type="button" (click)="onSubmit()"
+            [disabled]="createForm.invalid || isSaving">
+            {{ isSaving ? 'Creando...' : 'Crear Área' }}
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

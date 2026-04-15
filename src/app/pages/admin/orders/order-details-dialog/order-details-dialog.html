@@ -1,0 +1,101 @@
+<h2 mat-dialog-title>
+    Detalles del Pedido #{{ order.id_order }}
+    <button mat-icon-button (click)="onClose()" class="close-button">
+        <mat-icon>close</mat-icon>
+    </button>
+</h2>
+
+<mat-dialog-content>
+    <div class="order-info">
+        <div class="info-section">
+            <h3>Información General</h3>
+            <div class="info-row">
+                <span class="label">Cliente:</span>
+                <span class="value">{{ order.customer_name }}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Estado:</span>
+                <mat-chip [class]="'status-' + order.state_name.toLowerCase()">
+                    {{ order.state_name }}
+                </mat-chip>
+            </div>
+            <div class="info-row">
+                <span class="label">Fecha de Entrada:</span>
+                <span class="value">{{ order.entry_date }}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Fecha Estimada de Entrega:</span>
+                <span class="value">{{ order.estimated_delivery_date || 'No especificada' }}</span>
+            </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="info-section">
+            <h3>Productos del Pedido</h3>
+
+            @if(isLoadingProducts){
+            <div class="loading">Cargando productos...</div>
+            } @else if (products.length === 0) {
+            <div class="no-products">No hay productos en este pedido</div>
+            } @else {
+            <div class="products-list">
+                @for(product of products; track $index){
+                <div class="product-card">
+                    <div class="product-header">
+                        <h4>{{ $index + 1 }}. {{ product.name }}</h4>
+                        <mat-chip [class]="'status-' + (product.state_name?.toLowerCase() || 'pendiente')"
+                            class="small-chip">
+                            {{ product.state_name || 'N/A' }}
+                        </mat-chip>
+                    </div>
+
+                    <div class="product-details">
+                        <div class="detail-row">
+                            <mat-icon class="detail-icon">category</mat-icon>
+                            <span class="detail-label">Categoría:</span>
+                            <span class="detail-value">{{ product.category_name }}</span>
+                        </div>
+
+                        <div class="detail-row">
+                            <mat-icon class="detail-icon">inventory_2</mat-icon>
+                            <span class="detail-label">Tipo:</span>
+                            <span class="detail-value">{{ product.customized_label }}</span>
+                        </div>
+
+                        @if(product.fabric){
+                        <div class="detail-row">
+                            <mat-icon class="detail-icon">texture</mat-icon>
+                            <span class="detail-label">Tela:</span>
+                            <span class="detail-value">{{ product.fabric }}</span>
+                        </div>
+                        }
+
+                        @if(product.dimensions){
+                        <div class="detail-row">
+                            <mat-icon class="detail-icon">straighten</mat-icon>
+                            <span class="detail-label">Dimensiones:</span>
+                            <span class="detail-value">{{ product.dimensions }}</span>
+                        </div>
+                        }
+
+                        @if(product.description){
+                        <div class="detail-row">
+                            <mat-icon class="detail-icon">description</mat-icon>
+                            <span class="detail-label">Descripción:</span>
+                            <span class="detail-value">{{ product.description }}</span>
+                        </div>
+                        }
+
+                    </div>
+                </div>
+                }
+            </div>
+            }
+        </div>
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="onClose()">Cerrar</button>
+</mat-dialog-actions>

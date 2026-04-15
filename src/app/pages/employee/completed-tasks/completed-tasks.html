@@ -1,0 +1,135 @@
+<div class="completed-tasks-container">
+  <div class="header">
+    <h1>
+      <mat-icon>assignment_turned_in</mat-icon>
+      Tareas Completadas
+    </h1>
+    <button mat-raised-button color="primary" (click)="loadCompletedTasks()" [disabled]="isLoading">
+      <mat-icon>refresh</mat-icon>
+      Actualizar
+    </button>
+  </div>
+
+  @if(isLoading){
+  <div class="loading-container">
+    <mat-card>
+      <mat-card-content class="loading-content">
+        <mat-spinner diameter="60"></mat-spinner>
+        <p>Cargando tareas completadas...</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  } @else if (errorMessage) {
+  <div class="error-container">
+    <mat-card>
+      <mat-card-content class="error-content">
+        <mat-icon color="warn">error_outline</mat-icon>
+        <h3>{{ errorMessage }}</h3>
+        <button mat-raised-button color="primary" (click)="loadCompletedTasks()">
+          <mat-icon>refresh</mat-icon>
+          Reintentar
+        </button>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  }@else if (groupedTasks.length > 0) {
+  <div class="completed-tasks-content">
+    @for(group of groupedTasks; track group){
+    <div class="product-group">
+      <mat-card>
+        <mat-card-header>
+          <div class="card-header-content">
+            <div>
+              <mat-card-title>
+                <mat-icon>inventory_2</mat-icon>
+                {{ group.productName }}
+              </mat-card-title>
+              <mat-card-subtitle>
+                <mat-icon>check_circle</mat-icon>
+                {{ group.tasks.length }} tarea(s) completada(s)
+                @if(group.totalDuration > 0){
+                <span class="duration-badge">
+                  <mat-icon>schedule</mat-icon>
+                  Tiempo total: {{ formatTotalDuration(group.totalDuration) }}
+                </span>
+                }
+              </mat-card-subtitle>
+            </div>
+            <button mat-raised-button color="primary" [disabled]="loadingProductId === group.productId"
+              (click)="onViewProductDetail(group.productId)">
+              @if(loadingProductId === group.productId){
+              <mat-spinner diameter="20"></mat-spinner>
+              }
+              <mat-icon>visibility</mat-icon>
+              {{ loadingProductId === group.productId ? 'Cargando...' : 'Ver Detalle' }}
+            </button>
+          </div>
+        </mat-card-header>
+
+        <mat-divider></mat-divider>
+
+        <mat-card-content>
+          <div class="tasks-list">
+            @for(task of group.tasks; track tasks){
+            <div class="task-item completed">
+              <div class="task-header">
+                <div class="task-info">
+                  <div class="task-sequence">
+                    <mat-icon>filter_{{ task.sequence }}</mat-icon>
+                    <span>Secuencia {{ task.sequence }}</span>
+                  </div>
+                  @if (task.area) {
+                  <div class="task-area">
+                    <mat-icon>business</mat-icon>
+                    <span>{{ task.area.name }}</span>
+                  </div>
+                  }
+
+                </div>
+                <mat-chip color="primary" highlighted>
+                  <mat-icon>check_circle</mat-icon>
+                  {{ task.state?.name || 'Completada' }}
+                </mat-chip>
+              </div>
+
+
+              <div class="task-details">
+                <div class="detail-row">
+                  <mat-icon>schedule</mat-icon>
+                  <span><strong>Iniciada:</strong> {{ formatDate(task.start_date) }}</span>
+                </div>
+                <div class="detail-row">
+                  <mat-icon>done</mat-icon>
+                  <span><strong>Finalizada:</strong> {{ formatDate(task.end_date) }}</span>
+                </div>
+                <div class="detail-row">
+                  <mat-icon>timer</mat-icon>
+                  <span><strong>Duración:</strong> {{ calculateDuration(task.start_date, task.end_date) }}</span>
+                </div>
+              </div>
+
+              <div class="completion-info">
+                <mat-icon>verified</mat-icon>
+                <span>Tarea completada exitosamente</span>
+              </div>
+            </div>
+            }
+
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    }
+  </div>
+  } @else {
+  <div class="empty-container">
+    <mat-card>
+      <mat-card-content class="empty-content">
+        <mat-icon>inbox</mat-icon>
+        <h3>No hay tareas completadas</h3>
+        <p>Aún no has completado ninguna tarea</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  }
+</div>

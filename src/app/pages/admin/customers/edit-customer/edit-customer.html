@@ -1,0 +1,60 @@
+<div class="edit-customer-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>person</mat-icon> Editar Cliente
+      </mat-card-title>
+      @if(customer){
+      <mat-card-subtitle> Cliente: {{ customer.name }}</mat-card-subtitle>
+      }
+    </mat-card-header>
+
+    <mat-card-content>
+      @if(isLoading){
+      <div class="loading">Cargando cliente...</div>
+      } @else {
+      <form [formGroup]="editForm">
+        <div class="form-section">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nombre</mat-label>
+            <input matInput formControlName="name" placeholder="Ingrese el nuevo nombre">
+            <mat-icon matSuffix>person_outline</mat-icon>
+            @if(editForm.get('name')?.hasError('maxlength')){
+              <mat-error>Máximo 100 caracteres</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Dirección</mat-label>
+            <input matInput formControlName="address" placeholder="Ingrese la nueva dirección">
+            <mat-icon matSuffix>location_on</mat-icon>
+            @if(editForm.get('address')?.hasError('maxlength')){
+              <mat-error>Máximo 100 caracteres</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Teléfono</mat-label>
+            <input matInput formControlName="phone" placeholder="Ingrese el nuevo teléfono">
+            <mat-icon matSuffix>phone</mat-icon>
+            @if(editForm.get('phone')?.hasError('maxlength')){
+              <mat-error>Máximo 15 caracteres</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+
+        <div class="actions">
+          <button mat-button type="button" (click)="onCancel()" [disabled]="isSaving">
+            Cancelar
+          </button>
+          <button mat-raised-button color="primary" type="button" (click)="onSubmit()"
+            [disabled]="!editForm.valid || isSaving">
+            {{ isSaving ? 'Guardando...' : 'Guardar Cambios' }}
+          </button>
+        </div>
+      </form>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

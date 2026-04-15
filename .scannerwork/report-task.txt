@@ -1,0 +1,7 @@
+organization=ferrerdecaldas
+projectKey=frontvalidacion
+serverUrl=https://sonarcloud.io
+serverVersion=8.0.0.85371
+dashboardUrl=https://sonarcloud.io/dashboard?id=frontvalidacion
+ceTaskId=AZ2P92JefR0k4NhQL3iw
+ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AZ2P92JefR0k4NhQL3iw
