@@ -1,0 +1,33 @@
+pipeline {
+    agent any
+    tools {
+        nodejs 'node20' 
+    }
+    environment {
+        SONAR_TOKEN = credentials('SONAR_TOKEN_FRONTEND')
+    }
+    stages {
+        stage('Instalar Dependencias') {
+            steps {
+                sh 'npm install'
+            }
+        }
+        stage('Tests y Cobertura') {
+            steps {
+                // Este comando es el estándar para Angular en CI
+                sh 'npm run test -- --watchAll=false --code-coverage'
+            }
+        }
+        stage('Análisis SonarCloud') {
+            steps {
+                sh """
+                npx sonar-scanner \
+                -Dsonar.projectKey=jorgelopez04_FrontendValidacion \
+                -Dsonar.token=${SONAR_TOKEN} \
+                -Dsonar.host.url=https://sonarcloud.io \
+                -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+                """
+            }
+        }
+    }
+}
