@@ -40,19 +40,15 @@ pipeline {
         stage('Construir y Subir Imagen Docker') {
             steps {
                 script {
-                    // Usamos el plugin nativo 'docker' para evitar el error 'docker: not found'
-                    // Asegúrate de tener instalado el plugin "Docker Pipeline" en Jenkins
+                    // Usamos un agente de Docker temporal para tener el binario disponible
                     docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
-                        // Construye la imagen usando el Dockerfile de tu repositorio
-                        def customImage = docker.build("${DOCKER_USER}/${IMAGE_NAME}:latest")
-                        
-                        // Sube la imagen automáticamente a Docker Hub
-                        customImage.push()
+                        // Esta línea le dice a Jenkins que use el comando docker del host
+                        sh "docker build -t ${DOCKER_USER}/${IMAGE_NAME}:latest ."
+                        sh "docker push ${DOCKER_USER}/${IMAGE_NAME}:latest"
                     }
                 }
             }
         }
-    }
 
     post {
         always {
