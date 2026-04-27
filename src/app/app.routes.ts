@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
-import { Login } from './pages/login/login';
+import { LoginComponent } from './pages/login/login'; // Corregido
 import { authGuard } from './guards/auth-guard';
 import { roleGuard } from './guards/role-guard';
-import { AdminLayout } from './layouts/admin-layout/admin-layout';
+import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout'; // Corregido
 import { Dashboard } from './pages/dashboard/dashboard';
 import { OrdersList } from './pages/admin/orders/orders-list/orders-list';
 import { CreateOrder } from './pages/admin/orders/create-order/create-order';
@@ -25,20 +25,19 @@ import { EditCategory } from './pages/admin/categories/edit-category/edit-catego
 import { FlowsList } from './pages/admin/flows/flows-list/flows-list';
 import { CreateFlow } from './pages/admin/flows/create-flow/create-flow';
 import { EditFlow } from './pages/admin/flows/edit-flow/edit-flow';
-import { EmployeeLayout } from './layouts/employee-layout/employee-layout';
+import { EmployeeLayoutComponent } from './layouts/employee-layout/employee-layout'; // Corregido
 import { EmployeeProfileComponent } from './pages/employee/profile/employee-profile';
 import { EmployeeTasks } from './pages/employee/tasks/employee-tasks/employee-tasks';
 import { CompletedTasks } from './pages/employee/completed-tasks/completed-tasks';
 
-
 export const routes: Routes = [
     {
         path: '',
-        component: Login
+        component: LoginComponent // Corregido
     },
     {
         path: 'admin',
-        component: AdminLayout,
+        component: AdminLayoutComponent, // Corregido
         canActivate: [authGuard, roleGuard],
         data: { role: 'admin' },
         children: [
@@ -69,14 +68,13 @@ export const routes: Routes = [
     },
     {
         path: 'employee',
-        component: EmployeeLayout,
+        component: EmployeeLayoutComponent, // Corregido
         canActivate: [authGuard, roleGuard],
         data: { role: 'employee' },
         children: [
             { path: 'profile', component: EmployeeProfileComponent },
-            {path: 'tasks',component: EmployeeTasks},
-            {path: 'completed-tasks',component: CompletedTasks}
+            { path: 'tasks', component: EmployeeTasks },
+            { path: 'completed-tasks', component: CompletedTasks }
         ]
-
     }
 ];

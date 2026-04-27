@@ -67,12 +67,15 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "buildTarget": "frontend-tailorflow:build"
+          },
           "configurations": {
             "production": {
-              "browserTarget": "frontend-tailorflow:build:production"
+              "buildTarget": "frontend-tailorflow:build:production"
             },
             "development": {
-              "browserTarget": "frontend-tailorflow:build:development"
+              "buildTarget": "frontend-tailorflow:build:development"
             }
           },
           "defaultConfiguration": "development"

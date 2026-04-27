@@ -22,15 +22,15 @@ export class AuthService {
   ) {}
 
   login(credentials: Credentials): Observable<ResponseDto<LoginResponse>> {
+    // Usamos la ruta estándar configurada en tu Backend (sin tildes)
     return this.http.post<ResponseDto<LoginResponse>>(`${this.apiUrl}/auth/login`, credentials)
       .pipe(
         tap(response => {
-          if (response.data.access_token) {
+          if (response.data && response.data.access_token) {
             localStorage.setItem(tokenKey, response.data.access_token);
           }
         })
       );
-
   }
 
   logout(): void {
@@ -47,8 +47,7 @@ export class AuthService {
     if (!token) {
       return false;
     }
-    return !this.isTokenExpired(token)
-
+    return !this.isTokenExpired(token);
   }
 
   private isTokenExpired(token: string): boolean {
@@ -71,13 +70,18 @@ export class AuthService {
     }
 
     try {
+      // Decodificamos el payload del JWT (la parte central del token)
       const payload = JSON.parse(atob(token.split('.')[1]));
+      
+      /**
+       * IMPORTANTE: En tu base de datos el campo es 'id_role'.
+       * Aquí mapeamos 'payload.id_role' al objeto 'id_rol' que espera tu DTO.
+       */
       return {
-        id_rol: payload.id_rol,
+        id_rol: payload.id_role || payload.id_rol, 
         cc: payload.cc,
         access_token: token
       };
-
     } catch (error) {
       console.error('Error al decodificar token', error);
       return null;
@@ -91,6 +95,10 @@ export class AuthService {
       return '';
     } 
 
+    /**
+     * Según tus capturas de Supabase, Jorge y Juan tienen id_role: 1.
+     * Esto ahora los enviará a la ruta de administrador correctamente.
+     */
     return user.id_rol === 1 ? '/admin' : '/employee';
   }
 }

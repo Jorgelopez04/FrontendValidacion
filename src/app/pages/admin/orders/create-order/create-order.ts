@@ -19,7 +19,7 @@ import { Customer } from '../../../../core/models/customer.model';
 import { Category } from '../../../../core/models/category.model';
 import { CreateProductPayload } from '../../../../core/models api/api.model';
 import { ResponseDto } from '../../../../core/models/response.dto';
-import { forkJoin, Observable, throwError } from 'rxjs';
+import { forkJoin, Observable, throwError, of } from 'rxjs';
 import { catchError, map, startWith } from 'rxjs/operators';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
@@ -63,7 +63,6 @@ export class CreateOrder implements OnInit {
     private customersService: CustomersService,
     private categoriesService: CategoriesService
   ) {
-
     this.orderForm = this.fb.group({
       id_customer: [null, Validators.required],
       estimated_delivery_date: [null, [Validators.required, this.futureDateValidator]]
@@ -82,12 +81,10 @@ export class CreateOrder implements OnInit {
 
   futureDateValidator(control: AbstractControl) {
     if (!control.value) return null;
-
     const selectedDate = new Date(control.value);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     selectedDate.setHours(0, 0, 0, 0);
-
     return selectedDate < today ? { pastDate: true } : null;
   }
 
@@ -104,7 +101,6 @@ export class CreateOrder implements OnInit {
       dimensions: [''],
       description: [''],
     });
-
     this.products.push(productGroup);
   }
 
@@ -112,11 +108,10 @@ export class CreateOrder implements OnInit {
     this.products.removeAt(index);
   }
 
-  
   loadCustomers(): void {
     this.customersService.getAllForForms().subscribe({
       next: (response) => {
-        this.customers = response.data;
+        this.customers = response.data || [];
       },
       error: (err) => console.error('Error cargando clientes', err)
     });
@@ -124,16 +119,49 @@ export class CreateOrder implements OnInit {
 
   loadCategories(): void {
     this.categoriesService.getAll().subscribe({
-      next: (response: ResponseDto<Category[]>) => this.categories = response.data,
+      next: (response: ResponseDto<Category[]>) => this.categories = response.data || [],
       error: (err) => console.error('Error cargando categorías', err)
     });
   }
-
 
   getProductGroup(index: number): FormGroup {
     return this.products.at(index) as FormGroup;
   }
 
+  setupCustomerFilter(): void {
+  this.filteredCustomers = this.customerSearchControl.valueChanges.pipe(
+    startWith(''),
+    map(value => {
+      // Si value es nulo o indefinido, usamos string vacío
+      if (!value) return this.customers;
+
+      // Si es un objeto Customer, extraemos el nombre; si es string, lo usamos directo
+      const filterValue = typeof value === 'string' ? value : (value as Customer).name;
+      
+      return this._filterCustomers(filterValue || '');
+    })
+  );
+}
+
+  private _filterCustomers(value: string): Customer[] {
+    const filterValue = value.toLowerCase();
+    return this.customers.filter(customer =>
+      customer.name?.toLowerCase().includes(filterValue)
+    );
+  }
+
+  onCustomerSelected(event: any): void {
+    const customer = event.option.value as Customer;
+    this.orderForm.patchValue({
+      id_customer: customer.id_customer
+    });
+  }
+
+  // Se asegura de no intentar leer .name si el objeto es nulo
+  displayCustomerName = (customer: Customer | any): string => {
+    if (typeof customer === 'string') return customer;
+    return customer && customer.name ? customer.name : '';
+  };
 
   createOrderAndContinue(stepper: MatStepper): void {
     if (this.orderForm.valid) {
@@ -149,28 +177,22 @@ export class CreateOrder implements OnInit {
         },
         error: (err) => {
           console.error('Error al crear la orden base', err);
-          console.error('Error al crear la orden: ' + (err.error?.message || err.message));
         }
       });
     } else {
       this.orderForm.markAllAsTouched();
-      console.error('Por favor complete todos los campos requeridos del primer paso.');
     }
   }
 
   onSubmit(): void {
     if (!this.createdOrderId || !this.productsForm.valid) {
-      console.error('Por favor, complete todos los pasos y campos requeridos correctamente. Verifique las advertencias de stock.');
       this.productsForm.markAllAsTouched();
       return;
     }
 
     this.isSubmitting = true;
     const productsData = this.productsForm.value.products;
-    let productCreationObservables: Observable<any>[] = [];
-
-
-    productsData.forEach((product: any, index: number) => {
+    const productCreationObservables = productsData.map((product: any, index: number) => {
       const productPayload: CreateProductPayload = {
         id_order: this.createdOrderId!,
         id_category: product.id_category,
@@ -181,69 +203,32 @@ export class CreateOrder implements OnInit {
         description: product.description || undefined,
       };
 
-      const productCreation$ = this.ordersService.createProduct(productPayload).pipe(
-        map((response) => {
-          console.log(`Producto ${response.data.id_product} creado correctamente.`);
-          return response;
-        }),
+      return this.ordersService.createProduct(productPayload).pipe(
         catchError(err => {
           console.error(`Error al crear el producto ${index + 1}:`, err);
-          return throwError(() => new Error('Error al crear un producto (incluye materiales/flujo): ' + (err.error?.message || err.message)));
+          return throwError(() => new Error(err.error?.message || err.message));
         })
       );
-      productCreationObservables.push(productCreation$);
     });
-
 
     forkJoin(productCreationObservables).subscribe({
       next: () => {
         this.isSubmitting = false;
-        console.log('Pedido creado exitosamente con ID: ' + this.createdOrderId + '. (Productos, materiales y tareas procesadas)');
         this.router.navigate(['/admin/orders']);
       },
       error: (error) => {
         this.isSubmitting = false;
-        console.error('Error fatal durante la creación del pedido:', error);
-        console.error('Error al finalizar el pedido: ' + error.message);
+        console.error('Error fatal:', error);
       }
     });
   }
 
   private formatDate(date: Date): string {
-
-    const localDate = new Date(date);
-    const year = localDate.getFullYear();
-    const month = String(localDate.getMonth() + 1).padStart(2, '0');
-    const day = String(localDate.getDate()).padStart(2, '0');
+    if (!date) return '';
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   }
-
-  setupCustomerFilter(): void {
-    this.filteredCustomers = this.customerSearchControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filterCustomers(value || ''))
-    );
-  }
-
-  private _filterCustomers(value: string): Customer[] {
-    const filterValue = value.toLowerCase();
-    return this.customers.filter(customer =>
-      customer.name.toLowerCase().includes(filterValue)
-    );
-  }
-
-  onCustomerSelected(event: any): void {
-    this.orderForm.patchValue({
-      id_customer: event.option.value.id_customer
-    });
-  }
-
-  displayCustomerName = (customer: Customer): string => {
-    return customer ? customer.name : '';
-  };
-
-  displayCustomer(id: number): string {
-    return ''; 
-  }
-
 }

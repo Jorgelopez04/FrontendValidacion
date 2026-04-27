@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { EmployeeTasks } from './employee-tasks';
 
@@ -17,29 +18,39 @@ describe('EmployeeTasks FULL COVERAGE FIX', () => {
   let productsService: jasmine.SpyObj<ProductsService>;
   let employeesService: jasmine.SpyObj<EmployeesService>;
   let authService: jasmine.SpyObj<AuthService>;
-  let dialog: jasmine.SpyObj<MatDialog>;
+  let dialogSpy: jasmine.SpyObj<MatDialog>;
 
   beforeEach(async () => {
+    // Definición de espías
     tasksService = jasmine.createSpyObj('TasksService', [
       'getAssignedTasks',
       'getProductTasks',
       'startTask',
       'completeTask'
     ]);
-
     productsService = jasmine.createSpyObj('ProductsService', ['getById']);
     employeesService = jasmine.createSpyObj('EmployeesService', ['getEmployeeDetails']);
     authService = jasmine.createSpyObj('AuthService', ['getCurrentUser']);
-    dialog = jasmine.createSpyObj('MatDialog', ['open']);
+    
+    // Configuración robusta de MatDialog para evitar error 'push' de undefined
+    dialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
+    dialogSpy.open.and.returnValue({
+      afterClosed: () => of(true),
+      close: () => {}
+    } as any);
 
     await TestBed.configureTestingModule({
-      imports: [EmployeeTasks],
+      imports: [
+        EmployeeTasks, 
+        MatDialogModule, 
+        NoopAnimationsModule
+      ],
       providers: [
         { provide: TasksService, useValue: tasksService },
         { provide: ProductsService, useValue: productsService },
         { provide: EmployeesService, useValue: employeesService },
         { provide: AuthService, useValue: authService },
-        { provide: MatDialog, useValue: dialog }
+        { provide: MatDialog, useValue: dialogSpy }
       ]
     }).compileComponents();
 
@@ -127,11 +138,12 @@ describe('EmployeeTasks FULL COVERAGE FIX', () => {
   it('should start task', fakeAsync(() => {
     const task: any = { id_task: 1, id_state: 1 };
 
-    component['currentEmployeeTasks'] = [
+    // Acceso a propiedades privadas para setup de estado
+    (component as any).currentEmployeeTasks = [
       { id_task: 1, id_state: 1, id_product: 10, sequence: 1 } as any
     ];
 
-    component['productTasks'] = new Map();
+    (component as any).productTasks = new Map();
 
     tasksService.startTask.and.returnValue(
       of({ message: 'ok' } as any)
@@ -170,18 +182,19 @@ describe('EmployeeTasks FULL COVERAGE FIX', () => {
     component.onViewProductDetail(1);
     tick();
 
-    expect(dialog.open).toHaveBeenCalled();
+    // Ahora dialogSpy tiene la configuración correcta para no fallar
+    expect(dialogSpy.open).toHaveBeenCalled();
   }));
 
   // =========================
   // 8. canStartTask FULL BRANCH HIT
   // =========================
   it('should evaluate canStartTask', () => {
-    component['currentEmployeeTasks'] = [
+    (component as any).currentEmployeeTasks = [
       { id_task: 1, id_state: 1, id_product: 10, sequence: 1 } as any
     ];
 
-    component['productTasks'] = new Map([
+    (component as any).productTasks = new Map([
       [10, [{ id_task: 1, id_state: 3, sequence: 0 } as any]]
     ]);
 

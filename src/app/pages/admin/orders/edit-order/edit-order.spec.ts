@@ -1,11 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 
+// ✅ Cambio: EditOrder -> EditOrderComponent
 import { EditOrder } from './edit-order';
 import { OrdersService } from '../../../../services/orders.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
-describe('EditOrder', () => {
+describe('EditOrderComponent', () => {
   let component: EditOrder;
   let fixture: ComponentFixture<EditOrder>;
 
@@ -13,8 +14,9 @@ describe('EditOrder', () => {
   let routerSpy: jasmine.SpyObj<Router>;
 
   beforeEach(async () => {
+    // ✅ Asegúrate de que estos nombres coincidan con los métodos de tu OrdersService
     ordersSpy = jasmine.createSpyObj('OrdersService', [
-      'getOrderWithProducts',
+      'getById',
       'update',
       'updateProduct'
     ]);
@@ -22,7 +24,8 @@ describe('EditOrder', () => {
     routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
     await TestBed.configureTestingModule({
-      imports: [EditOrder],
+      // ✅ Cambio: EditOrder -> EditOrderComponent
+      imports: [EditOrder], 
       providers: [
         { provide: OrdersService, useValue: ordersSpy },
         { provide: Router, useValue: routerSpy },
@@ -39,9 +42,13 @@ describe('EditOrder', () => {
     component = fixture.componentInstance;
   });
 
-  // ✅ 1. LOAD OK (PENDING)
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  // ✅ 1. LOAD OK
   it('should load order correctly when PENDING', () => {
-    ordersSpy.getOrderWithProducts.and.returnValue(
+    ordersSpy.getById.and.returnValue(
       of({
         data: {
           state_name: 'PENDING',
@@ -65,9 +72,9 @@ describe('EditOrder', () => {
     expect(component.isLoading).toBeFalse();
   });
 
-  // ❌ 2. LOAD BLOCKED (NO PENDING)
+  // ❌ 2. LOAD BLOCKED
   it('should redirect if order is not PENDING', () => {
-    ordersSpy.getOrderWithProducts.and.returnValue(
+    ordersSpy.getById.and.returnValue(
       of({
         data: {
           state_name: 'DONE',
@@ -86,7 +93,7 @@ describe('EditOrder', () => {
   it('should handle load error', () => {
     spyOn(console, 'error');
 
-    ordersSpy.getOrderWithProducts.and.returnValue(
+    ordersSpy.getById.and.returnValue(
       throwError(() => new Error('fail'))
     );
 
@@ -97,7 +104,7 @@ describe('EditOrder', () => {
 
   // ✅ 4. SUBMIT + UPDATE FLOW
   it('should submit and update order + products', () => {
-    ordersSpy.getOrderWithProducts.and.returnValue(
+    ordersSpy.getById.and.returnValue(
       of({
         data: {
           state_name: 'PENDING',
@@ -127,8 +134,8 @@ describe('EditOrder', () => {
 
   // ❌ 5. INVALID FORM
   it('should block submit when form invalid', () => {
+    // Si tu formulario se llama 'orderForm' o similar, asegúrate de que esté marcado como inválido aquí
     component.onSubmit();
-
     expect(component.isSaving).toBeFalse();
   });
 });

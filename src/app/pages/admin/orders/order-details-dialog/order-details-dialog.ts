@@ -1,54 +1,60 @@
-import { Component, Inject, OnInit } from '@angular/core'; 
+import { Component, Inject, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDividerModule } from '@angular/material/divider';
 import { MatChipsModule } from '@angular/material/chips';
-import { Order } from '../../../../core/models/order.model';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatButtonModule } from '@angular/material/button';
+
 import { OrdersService } from '../../../../services/orders.service';
-import { ProductDetail } from '../../../../core/models/order.model';
+import { OrderWithProducts, ProductDetail } from '../../../../core/models/order.model';
+import { ResponseDto } from '../../../../core/models/response.dto';
 
 @Component({
   selector: 'app-order-details-dialog',
-  standalone: true,
-  imports: [
-    MatDialogModule,
-    MatButtonModule,
-    MatIconModule,
-    MatDividerModule,
-    MatChipsModule 
-  ],
+  standalone: true, // 🔥 IMPORTANTE
   templateUrl: './order-details-dialog.html',
-  styleUrl: './order-details-dialog.scss'
+  imports: [
+    CommonModule,
+    MatDialogModule,
+    MatIconModule,
+    MatChipsModule,
+    MatDividerModule,
+    MatButtonModule
+  ]
 })
-export class OrderDetailsDialog implements OnInit { 
+export class OrderDetailsDialog implements OnInit {
+
+  order!: OrderWithProducts;
   products: ProductDetail[] = [];
   isLoadingProducts = true;
 
   constructor(
-    public dialogRef: MatDialogRef<OrderDetailsDialog>,
-    @Inject(MAT_DIALOG_DATA) public order: Order,
-    private ordersService: OrdersService
+    private ordersService: OrdersService,
+    private dialogRef: MatDialogRef<OrderDetailsDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: { orderId: number }
   ) {}
 
   ngOnInit(): void {
-    this.loadProducts();
+    this.loadOrder();
   }
 
-  loadProducts(): void {
-    this.ordersService.getOrderWithProducts(this.order.id_order).subscribe({
-      next: (response) => {
-        this.products = response.data.products || [];
+  loadOrder() {
+    this.ordersService.getById(this.data.orderId).subscribe({
+      next: (response: ResponseDto<OrderWithProducts>) => {
+        this.order = response.data;
+        this.products = this.order.products || [];
         this.isLoadingProducts = false;
       },
-      error: (err) => {
-        console.error('Error cargando productos', err);
+      error: (err: any) => {
+        console.error(err);
         this.isLoadingProducts = false;
       }
     });
   }
 
-  onClose(): void {
+  onClose() {
     this.dialogRef.close();
   }
 }

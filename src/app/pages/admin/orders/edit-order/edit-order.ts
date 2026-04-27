@@ -68,7 +68,7 @@ export class EditOrder implements OnInit {
   }
 
   loadOrder(): void {
-    this.ordersService.getOrderWithProducts(this.orderId).subscribe({
+    this.ordersService.getById(this.orderId).subscribe({
       next: (response) => {
         this.order = response.data;
 

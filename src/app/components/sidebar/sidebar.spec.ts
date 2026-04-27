@@ -1,37 +1,39 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
-import { Sidebar } from './sidebar';
+import { SidebarComponent } from './sidebar'; 
 import { ADMIN_MENU_ITEMS } from '../../common/menu-items';
 
-describe('Sidebar', () => {
-  let component: Sidebar;
-  let fixture: ComponentFixture<Sidebar>;
+describe('SidebarComponent', () => {
+  let component: SidebarComponent;
+  let fixture: ComponentFixture<SidebarComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Sidebar],
+      imports: [SidebarComponent],
       providers: [
-        provideRouter([]) // necesario por RouterModule
+        provideRouter([]),
+        // ✅ Crucial: Provee HttpClient para que AuthService no rompa el test
+        provideHttpClient(),
+        provideHttpClientTesting()
       ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Sidebar);
+    fixture = TestBed.createComponent(SidebarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  // ✅ create
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  // ✅ valor por defecto
   it('should have default menu items', () => {
     expect(component.menuItems).toEqual(ADMIN_MENU_ITEMS);
   });
 
-  // ✅ cambio de input
   it('should update menu items when input changes', () => {
     const mockMenu = [
       { label: 'Test', icon: 'home', route: '/test' }
@@ -42,5 +44,4 @@ describe('Sidebar', () => {
 
     expect(component.menuItems).toEqual(mockMenu);
   });
-
 });

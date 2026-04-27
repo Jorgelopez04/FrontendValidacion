@@ -37,12 +37,12 @@ export class OrderDetailsDialog implements OnInit {
   }
 
   loadProducts(): void {
-    this.ordersService.getOrderWithProducts(this.order.id_order).subscribe({
+    this.ordersService.getById(this.order.id_order).subscribe({
       next: (response) => {
         this.products = response.data.products || [];
         this.isLoadingProducts = false;
       },
-      error: (err) => {
+      error: (err:any) => {
         console.error('Error cargando productos', err);
         this.isLoadingProducts = false;
       }

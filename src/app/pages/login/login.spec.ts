@@ -4,11 +4,11 @@ import { Router } from '@angular/router';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { of, throwError } from 'rxjs';
 
-import { Login } from './login';
+// ✅ Corregido el nombre del import
+import { LoginComponent } from './login'; 
 import { AuthService } from '../../services/auth.service';
 
 /* ---------------- MOCKS ---------------- */
-
 class MockAuthService {
   login = jasmine.createSpy('login');
   getHomeRoute = jasmine.createSpy('getHomeRoute');
@@ -20,15 +20,18 @@ class MockRouter {
 
 /* ---------------- TEST ---------------- */
 
-describe('Login', () => {
-  let component: Login;
-  let fixture: ComponentFixture<Login>;
+// ✅ Cambiado describe de 'Login' a 'LoginComponent'
+describe('LoginComponent', () => {
+  // ✅ Cambiado el tipo de Login a LoginComponent
+  let component: LoginComponent;
+  let fixture: ComponentFixture<LoginComponent>;
   let authService: MockAuthService;
   let router: MockRouter;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Login, ReactiveFormsModule],
+      // ✅ Cambiado Login por LoginComponent (asegúrate que sea Standalone)
+      imports: [LoginComponent, ReactiveFormsModule],
       providers: [
         { provide: AuthService, useClass: MockAuthService },
         { provide: Router, useClass: MockRouter },
@@ -36,7 +39,8 @@ describe('Login', () => {
       ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Login);
+    // ✅ Cambiado a LoginComponent
+    fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
 
     authService = TestBed.inject(AuthService) as any;
@@ -90,6 +94,6 @@ describe('Login', () => {
     component.onSubmit();
 
     expect(console.error).toHaveBeenCalled();
-    expect(window.alert).toHaveBeenCalledWith('Credenciales inválidas');
+    expect(window.alert).toHaveBeenCalledWith('Cédula o contraseña incorrecta');
   });
 });

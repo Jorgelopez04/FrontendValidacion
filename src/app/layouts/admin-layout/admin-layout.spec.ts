@@ -1,17 +1,28 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
-import { AdminLayout } from './admin-layout';
+import { AdminLayoutComponent } from './admin-layout';
 
-describe('AdminLayout', () => {
-  let component: AdminLayout;
-  let fixture: ComponentFixture<AdminLayout>;
+describe('AdminLayoutComponent', () => {
+  let component: AdminLayoutComponent;
+  let fixture: ComponentFixture<AdminLayoutComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AdminLayout]
+      // AdminLayoutComponent es standalone, se mantiene en imports
+      imports: [AdminLayoutComponent], 
+      providers: [
+        // ✅ Solución al error NG0201: Provee el contexto de rutas necesario
+        provideRouter([]), 
+        // ✅ Proveedores de HTTP para servicios dependientes (como AuthService)
+        provideHttpClient(),
+        provideHttpClientTesting()
+      ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AdminLayout);
+    fixture = TestBed.createComponent(AdminLayoutComponent);
     component = fixture.componentInstance;
 
     fixture.detectChanges();
@@ -22,12 +33,13 @@ describe('AdminLayout', () => {
   });
 
   it('should toggle sidebar state', () => {
-    const initial = component.sidebarOpened;
+    // Forzamos un estado inicial conocido
+    component.sidebarOpened = true;
+    
+    component.toggleSidebar();
+    expect(component.sidebarOpened).toBeFalse();
 
     component.toggleSidebar();
-    expect(component.sidebarOpened).toBe(!initial);
-
-    component.toggleSidebar();
-    expect(component.sidebarOpened).toBe(initial);
+    expect(component.sidebarOpened).toBeTrue();
   });
 });

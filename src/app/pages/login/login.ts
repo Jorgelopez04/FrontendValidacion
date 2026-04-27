@@ -11,16 +11,16 @@ import { MatButtonModule } from '@angular/material/button';
   selector: 'app-login',
   standalone: true,
   imports: [
-    ReactiveFormsModule, 
-    MatCardModule, 
-    MatFormFieldModule, 
-    MatInputModule, 
-    MatButtonModule,
+    ReactiveFormsModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule
   ],
   templateUrl: './login.html',
-  styleUrl: './login.scss',
+  styleUrls: ['./login.scss']
 })
-export class Login {
+export class LoginComponent {
   loginForm: FormGroup;
 
   constructor(
@@ -29,23 +29,25 @@ export class Login {
     private router: Router
   ) {
     this.loginForm = this.fb.group({
-      cc: ['', [Validators.required]],
-      password: ['', [Validators.required]]
+      cc: ['', Validators.required],
+      password: ['', Validators.required]
     });
   }
 
-  onSubmit(): void{
-    if(this.loginForm.valid){
+  onSubmit() {
+    if (this.loginForm.valid) {
       this.authService.login(this.loginForm.value).subscribe({
-        next: () => {
+        next: (response) => {
+          // ESTA ES LA MAGIA: 
+          // El AuthService ahora nos dirá si ir a /admin o /employee
           const homeRoute = this.authService.getHomeRoute();
           this.router.navigate([homeRoute]);
         },
         error: (err) => {
           console.error('Error en el login', err);
-          alert('Credenciales inválidas');
+          alert('Cédula o contraseña incorrecta');
         }
-      })
+      });
     }
   }
 }

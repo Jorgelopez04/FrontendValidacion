@@ -1,101 +1,91 @@
 <h2 mat-dialog-title>
-    Detalles del Pedido #{{ order.id_order }}
-    <button mat-icon-button (click)="onClose()" class="close-button">
-        <mat-icon>close</mat-icon>
-    </button>
+  Detalles del Pedido #{{ order?.id_order }}
+  <button mat-icon-button (click)="onClose()" class="close-button">
+    <mat-icon>close</mat-icon>
+  </button>
 </h2>
 
-<mat-dialog-content>
-    <div class="order-info">
-        <div class="info-section">
-            <h3>Información General</h3>
-            <div class="info-row">
-                <span class="label">Cliente:</span>
-                <span class="value">{{ order.customer_name }}</span>
-            </div>
-            <div class="info-row">
-                <span class="label">Estado:</span>
-                <mat-chip [class]="'status-' + order.state_name.toLowerCase()">
-                    {{ order.state_name }}
-                </mat-chip>
-            </div>
-            <div class="info-row">
-                <span class="label">Fecha de Entrada:</span>
-                <span class="value">{{ order.entry_date }}</span>
-            </div>
-            <div class="info-row">
-                <span class="label">Fecha Estimada de Entrega:</span>
-                <span class="value">{{ order.estimated_delivery_date || 'No especificada' }}</span>
-            </div>
-        </div>
+<mat-dialog-content *ngIf="order; else loadingTpl">
 
-        <mat-divider></mat-divider>
+  <div class="order-info">
 
-        <div class="info-section">
-            <h3>Productos del Pedido</h3>
+    <!-- 🔹 INFO GENERAL -->
+    <div class="info-section">
+      <h3>Información General</h3>
 
-            @if(isLoadingProducts){
-            <div class="loading">Cargando productos...</div>
-            } @else if (products.length === 0) {
-            <div class="no-products">No hay productos en este pedido</div>
-            } @else {
-            <div class="products-list">
-                @for(product of products; track $index){
-                <div class="product-card">
-                    <div class="product-header">
-                        <h4>{{ $index + 1 }}. {{ product.name }}</h4>
-                        <mat-chip [class]="'status-' + (product.state_name?.toLowerCase() || 'pendiente')"
-                            class="small-chip">
-                            {{ product.state_name || 'N/A' }}
-                        </mat-chip>
-                    </div>
+      <div class="info-row">
+        <span class="label">Cliente:</span>
+        <span class="value">{{ order?.customer_name || 'Sin cliente' }}</span>
+      </div>
 
-                    <div class="product-details">
-                        <div class="detail-row">
-                            <mat-icon class="detail-icon">category</mat-icon>
-                            <span class="detail-label">Categoría:</span>
-                            <span class="detail-value">{{ product.category_name }}</span>
-                        </div>
+      <div class="info-row">
+        <span class="label">Estado:</span>
+        <mat-chip [class]="'status-' + ((order?.state_name || 'default').toLowerCase())">
+          {{ order?.state_name || 'Sin estado' }}
+        </mat-chip>
+      </div>
 
-                        <div class="detail-row">
-                            <mat-icon class="detail-icon">inventory_2</mat-icon>
-                            <span class="detail-label">Tipo:</span>
-                            <span class="detail-value">{{ product.customized_label }}</span>
-                        </div>
+      <div class="info-row">
+        <span class="label">Fecha de Entrada:</span>
+        <span class="value">{{ order?.entry_date }}</span>
+      </div>
 
-                        @if(product.fabric){
-                        <div class="detail-row">
-                            <mat-icon class="detail-icon">texture</mat-icon>
-                            <span class="detail-label">Tela:</span>
-                            <span class="detail-value">{{ product.fabric }}</span>
-                        </div>
-                        }
-
-                        @if(product.dimensions){
-                        <div class="detail-row">
-                            <mat-icon class="detail-icon">straighten</mat-icon>
-                            <span class="detail-label">Dimensiones:</span>
-                            <span class="detail-value">{{ product.dimensions }}</span>
-                        </div>
-                        }
-
-                        @if(product.description){
-                        <div class="detail-row">
-                            <mat-icon class="detail-icon">description</mat-icon>
-                            <span class="detail-label">Descripción:</span>
-                            <span class="detail-value">{{ product.description }}</span>
-                        </div>
-                        }
-
-                    </div>
-                </div>
-                }
-            </div>
-            }
-        </div>
+      <div class="info-row">
+        <span class="label">Fecha Estimada:</span>
+        <span class="value">
+          {{ order?.estimated_delivery_date || 'No especificada' }}
+        </span>
+      </div>
     </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- 🔹 PRODUCTOS -->
+    <div class="info-section">
+      <h3>Productos</h3>
+
+      <div *ngIf="isLoadingProducts">Cargando...</div>
+
+      <div *ngIf="!isLoadingProducts && products.length === 0">
+        No hay productos
+      </div>
+
+      <div *ngIf="!isLoadingProducts && products.length > 0">
+        <div *ngFor="let product of products; let i = index">
+
+          <h4>{{ i + 1 }}. {{ product.name }}</h4>
+
+          <mat-chip [class]="'status-' + ((product.state_name || 'default').toLowerCase())">
+            {{ product.state_name || 'N/A' }}
+          </mat-chip>
+
+          <p><b>Categoría:</b> {{ product.category_name }}</p>
+          <p><b>Tipo:</b> {{ product.customized_label }}</p>
+
+          <p *ngIf="product.fabric">
+            <b>Tela:</b> {{ product.fabric }}
+          </p>
+
+          <p *ngIf="product.dimensions">
+            <b>Dimensiones:</b> {{ product.dimensions }}
+          </p>
+
+          <p *ngIf="product.description">
+            <b>Descripción:</b> {{ product.description }}
+          </p>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
 </mat-dialog-content>
 
+<!-- 🔹 LOADING GLOBAL -->
+<ng-template #loadingTpl>
+  <div style="padding: 20px;">Cargando pedido...</div>
+</ng-template>
+
 <mat-dialog-actions align="end">
-    <button mat-button (click)="onClose()">Cerrar</button>
+  <button mat-button (click)="onClose()">Cerrar</button>
 </mat-dialog-actions>

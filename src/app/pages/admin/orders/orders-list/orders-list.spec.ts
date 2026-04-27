@@ -16,9 +16,12 @@ describe('OrdersList', () => {
   let router: Router;
 
   beforeEach(async () => {
-
     const ordersSpy = jasmine.createSpyObj('OrdersService', ['getAll']);
+    // Corregimos el mock del Dialog para que devuelva un objeto con afterClosed
     const dialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
+    dialogSpy.open.and.returnValue({
+      afterClosed: () => of(true) // Simula el cierre del modal
+    } as any);
 
     await TestBed.configureTestingModule({
       imports: [OrdersList],
@@ -26,7 +29,6 @@ describe('OrdersList', () => {
         provideHttpClient(),
         provideHttpClientTesting(),
         provideRouter([]),
-
         { provide: OrdersService, useValue: ordersSpy },
         { provide: MatDialog, useValue: dialogSpy }
       ]
@@ -39,6 +41,7 @@ describe('OrdersList', () => {
     dialog = TestBed.inject(MatDialog) as jasmine.SpyObj<MatDialog>;
     router = TestBed.inject(Router);
 
+    // Mock por defecto para evitar errores en el ngOnInit
     ordersService.getAll.and.returnValue(of({ data: [] } as any));
 
     fixture.detectChanges();
@@ -61,6 +64,8 @@ describe('OrdersList', () => {
   }));
 
   it('should handle error when loading orders', fakeAsync(() => {
+    // Espiamos el console.error para verificar que se loguea el error
+    spyOn(console, 'error');
     ordersService.getAll.and.returnValue(
       throwError(() => new Error('fail'))
     );
@@ -69,6 +74,7 @@ describe('OrdersList', () => {
     tick();
 
     expect(component.isLoading).toBeFalse();
+    expect(console.error).toHaveBeenCalled();
   }));
 
   it('should open dialog when viewing order', () => {
@@ -80,33 +86,34 @@ describe('OrdersList', () => {
   });
 
   it('should navigate if order is PENDING', () => {
-    spyOn(router, 'navigate');
+    const navigateSpy = spyOn(router, 'navigate');
 
+    // Nota: Asegúrate de que el estado coincida con lo que espera tu lógica
+    // Algunos componentes de TailorFlow usan 'PENDIENTE' en español.
     const order = { id_order: 1, state_name: 'PENDING' } as any;
 
     component.editOrder(order);
 
-    expect(router.navigate).toHaveBeenCalledWith(['/admin/orders/edit', 1]);
+    expect(navigateSpy).toHaveBeenCalledWith(['/admin/orders/edit', 1]);
   });
 
   it('should block edit if order is not PENDING', () => {
     spyOn(window, 'alert');
-    spyOn(router, 'navigate');
+    const navigateSpy = spyOn(router, 'navigate');
 
     const order = { id_order: 1, state_name: 'COMPLETED' } as any;
 
     component.editOrder(order);
 
-    expect(router.navigate).not.toHaveBeenCalled();
+    expect(navigateSpy).not.toHaveBeenCalled();
     expect(window.alert).toHaveBeenCalled();
   });
 
   it('should navigate to create order', () => {
-    spyOn(router, 'navigate');
+    const navigateSpy = spyOn(router, 'navigate');
 
     component.createOrder();
 
-    expect(router.navigate).toHaveBeenCalledWith(['/admin/orders/create']);
+    expect(navigateSpy).toHaveBeenCalledWith(['/admin/orders/create']);
   });
-
 });

@@ -3,7 +3,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { RouterOutlet } from '@angular/router'; // 1. Importación necesaria
 
 import { Navbar } from '../../components/navbar/navbar';
-import { Sidebar } from '../../components/sidebar/sidebar';
+import { SidebarComponent } from '../../components/sidebar/sidebar';
 
 @Component({
   selector: 'app-admin-layout',
@@ -11,13 +11,13 @@ import { Sidebar } from '../../components/sidebar/sidebar';
   imports: [
     MatSidenavModule,
     Navbar,
-    Sidebar,
+    SidebarComponent,
     RouterOutlet // 2. Agrégalo aquí
   ],
   templateUrl: './admin-layout.html',
   styleUrl: './admin-layout.scss',
 })
-export class AdminLayout {
+export class AdminLayoutComponent {
   sidebarOpened = true;
 
   toggleSidebar(): void {

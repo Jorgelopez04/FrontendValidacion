@@ -4,9 +4,10 @@ import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+
 import { OrdersService } from '../../../../services/orders.service';
 import { Order } from '../../../../core/models/order.model';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { OrderDetailsDialog } from '../order-details-dialog/order-details-dialog';
 
 @Component({
@@ -24,11 +25,16 @@ import { OrderDetailsDialog } from '../order-details-dialog/order-details-dialog
   styleUrl: './orders-list.scss'
 })
 export class OrdersList implements OnInit {
+
   orders: Order[] = [];
   displayedColumns: string[] = ['customer_name', 'entry_date', 'estimated_delivery_date', 'state_name', 'actions'];
   isLoading = false;
 
-  constructor(private ordersService: OrdersService, private dialog: MatDialog, private router: Router) { }
+  constructor(
+    private ordersService: OrdersService,
+    private dialog: MatDialog,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadOrders();
@@ -48,24 +54,25 @@ export class OrdersList implements OnInit {
     });
   }
 
+  // ✅ FIX AQUÍ
   viewOrderDetails(order: Order): void {
     this.dialog.open(OrderDetailsDialog, {
       width: '800px',
       maxHeight: '90vh',
-      data: order
+      data: { orderId: order.id_order } // 🔥 CORRECTO
     });
   }
 
   editOrder(order: Order): void {
-    
     if (order.state_name !== 'PENDING') {
       alert('Solo se pueden editar pedidos en estado PENDIENTE');
       return;
     }
+
     this.router.navigate(['/admin/orders/edit', order.id_order]);
   }
 
-  createOrder(): void{
+  createOrder(): void {
     this.router.navigate(['/admin/orders/create']);
   }
 }

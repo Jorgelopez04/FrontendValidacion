@@ -6,10 +6,6 @@ export interface Order {
   estimated_delivery_date?: string;
 }
 
-export interface OrderWithProducts extends Order {
-  products?: ProductDetail[];
-}
-
 export interface ProductDetail {
   id_product: number;
   name: string;
@@ -22,4 +18,8 @@ export interface ProductDetail {
   description?: string;
   ref_photo?: string;
   order_id: number;
+}
+
+export interface OrderWithProducts extends Order {
+  products?: ProductDetail[];
 }
