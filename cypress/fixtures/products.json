@@ -1,0 +1,45 @@
+{
+  "success": true,
+  "message": "Products retrieved successfully",
+  "data": [
+    {
+      "id_product": 1,
+      "name": "Almohada Personalizada",
+      "customized": 1,
+      "ref_photo": "photo_1.jpg",
+      "dimensions": "50x50cm",
+      "fabric": "Algodón",
+      "description": "Almohada decorativa personalizada",
+      "category_name": "Textiles",
+      "order_id": 1,
+      "state_name": "En Proceso",
+      "customized_label": "Sí"
+    },
+    {
+      "id_product": 2,
+      "name": "Taza Personalizada",
+      "customized": 1,
+      "ref_photo": "photo_2.jpg",
+      "dimensions": "10x10cm",
+      "fabric": "Cerámica",
+      "description": "Taza con diseño personalizado",
+      "category_name": "Accesorios",
+      "order_id": 1,
+      "state_name": "Completado",
+      "customized_label": "Sí"
+    },
+    {
+      "id_product": 3,
+      "name": "Camiseta Estándar",
+      "customized": 0,
+      "ref_photo": "photo_3.jpg",
+      "dimensions": "M",
+      "fabric": "100% Algodón",
+      "description": "Camiseta de color sólido",
+      "category_name": "Ropa",
+      "order_id": 2,
+      "state_name": "Pendiente",
+      "customized_label": "No"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "success": true,
+  "message": "Authenticated",
+  "data": {
+    "access_token": "abc.eyJpZF9yb2xlIjoyLCJjYyI6Ijk4NzY1NDMyMSJ9.def"
+  }
+}

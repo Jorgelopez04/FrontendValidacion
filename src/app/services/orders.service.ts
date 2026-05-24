@@ -16,7 +16,7 @@ export class OrdersService {
   private readonly API_URL = `${environment.apiUrl}/orders`;
   private readonly PRODUCT_API_URL = `${environment.apiUrl}/products`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
   getAll(): Observable<ResponseDto<Order[]>> {
     return this.http.get<ResponseDto<Order[]>>(`${this.API_URL}/all`);
@@ -29,6 +29,14 @@ export class OrdersService {
 
   create(order: CreateOrderPayload): Observable<ResponseDto<Order>> {
     return this.http.post<ResponseDto<Order>>(this.API_URL, order);
+  }
+
+  createOrder(orderData: any): Observable<ResponseDto<Order>> {
+    return this.http.post<ResponseDto<Order>>(`${this.API_URL}/create-order`, orderData);
+  }
+
+  updateOrder(orderId: number, orderData: any): Observable<ResponseDto<Order>> {
+    return this.http.patch<ResponseDto<Order>>(`${this.API_URL}/${orderId}/update-order`, orderData);
   }
 
   update(id: number, order: Partial<Order>): Observable<ResponseDto<Order>> {

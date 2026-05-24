@@ -1,0 +1,68 @@
+{
+  "success": true,
+  "message": "Tasks retrieved successfully",
+  "data": [
+    {
+      "id_task": 1,
+      "id_product": 1,
+      "id_employee": 1,
+      "id_area": 1,
+      "id_state": 2,
+      "sequence": 1,
+      "start_date": "2025-05-10T09:00:00",
+      "end_date": null,
+      "product": {
+        "id_product": 1,
+        "name": "Almohada Personalizada",
+        "customized": 1,
+        "category_name": "Textiles",
+        "state_name": "En Proceso"
+      },
+      "employee": {
+        "id_employee": 1,
+        "name": "Pedro Rodríguez",
+        "email": "pedro@example.com"
+      },
+      "area": {
+        "id_area": 1,
+        "name": "Corte",
+        "description": "Área de corte de telas"
+      },
+      "state": {
+        "id_state": 2,
+        "name": "En Progreso"
+      }
+    },
+    {
+      "id_task": 2,
+      "id_product": 2,
+      "id_employee": 1,
+      "id_area": 2,
+      "id_state": 1,
+      "sequence": 1,
+      "start_date": null,
+      "end_date": null,
+      "product": {
+        "id_product": 2,
+        "name": "Taza Personalizada",
+        "customized": 1,
+        "category_name": "Accesorios",
+        "state_name": "Pendiente"
+      },
+      "employee": {
+        "id_employee": 1,
+        "name": "Pedro Rodríguez",
+        "email": "pedro@example.com"
+      },
+      "area": {
+        "id_area": 2,
+        "name": "Decoración",
+        "description": "Área de decoración"
+      },
+      "state": {
+        "id_state": 1,
+        "name": "Pendiente"
+      }
+    }
+  ]
+}

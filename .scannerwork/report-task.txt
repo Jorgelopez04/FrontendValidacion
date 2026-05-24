@@ -1,7 +1,7 @@
 organization=jorgelopez04
 projectKey=jorgelopez04_FrontendValidacion
 serverUrl=https://sonarcloud.io
-serverVersion=8.0.0.86098
+serverVersion=8.0.0.86467
 dashboardUrl=https://sonarcloud.io/dashboard?id=jorgelopez04_FrontendValidacion
-ceTaskId=AZ3REpHGjhP_io9MUhzi
-ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AZ3REpHGjhP_io9MUhzi
+ceTaskId=AZ3fEfj-z1apV8ZKLzWZ
+ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AZ3fEfj-z1apV8ZKLzWZ

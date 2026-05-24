@@ -1,0 +1,38 @@
+﻿cypress/component/employee-tasks.cy.ts(69,11): error TS2322: Type 'null' is not assignable to type 'Date | undefined'.
+cypress/component/employee-tasks.cy.ts(70,11): error TS2739: Type '{ id_product: number; name: string; customized: number; category_name: string; state_name: string; }' is missing the following properties from type 'Product': order_id, customized_label
+cypress/component/employee-tasks.cy.ts(80,13): error TS2353: Object literal may only specify known properties, and 'email' does not exist in type 'Employee'.
+cypress/component/employee-tasks.cy.ts(85,13): error TS2353: Object literal may only specify known properties, and 'description' does not exist in type 'Area'.
+cypress/component/employee-tasks.cy.ts(95,9): error TS2353: Object literal may only specify known properties, and 'success' does not exist in type 'ResponseDto<Task[]>'.
+cypress/component/employee-tasks.cy.ts(105,25): error TS2339: Property 'success' does not exist on type 'ResponseDto<Task[]>'.
+cypress/component/employee-tasks.cy.ts(116,9): error TS2353: Object literal may only specify known properties, and 'success' does not exist in type 'ResponseDto<Task[]>'.
+cypress/component/employee-tasks.cy.ts(180,9): error TS2353: Object literal may only specify known properties, and 'success' does not exist in type 'ResponseDto<Product[]>'.
+cypress/component/employee-tasks.cy.ts(190,25): error TS2339: Property 'success' does not exist on type 'ResponseDto<Product[]>'.
+cypress/component/employee-tasks.cy.ts(202,9): error TS2353: Object literal may only specify known properties, and 'success' does not exist in type 'ResponseDto<Product[]>'.
+cypress/component/employee-tasks.cy.ts(247,11): error TS2322: Type 'null' is not assignable to type 'Date | undefined'.
+cypress/component/employee-tasks.cy.ts(248,11): error TS2739: Type '{ id_product: number; name: string; customized: number; category_name: string; state_name: string; }' is missing the following properties from type 'Product': order_id, customized_label
+cypress/component/employee-tasks.cy.ts(258,13): error TS2353: Object literal may only specify known properties, and 'email' does not exist in type 'Employee'.
+cypress/component/employee-tasks.cy.ts(263,13): error TS2353: Object literal may only specify known properties, and 'description' does not exist in type 'Area'.
+cypress/component/employee-tasks.cy.ts(273,9): error TS2353: Object literal may only specify known properties, and 'success' does not exist in type 'ResponseDto<Task[]>'.
+cypress/component/employee-tasks.cy.ts(318,9): error TS2353: Object literal may only specify known properties, and 'success' does not exist in type 'ResponseDto<Task[]>'.
+cypress/component/orders-list.cy.ts(49,7): error TS2353: Object literal may only specify known properties, and 'success' does not exist in type 'ResponseDto<Order[]>'.
+cypress/component/orders-list.cy.ts(69,7): error TS2353: Object literal may only specify known properties, and 'success' does not exist in type 'ResponseDto<Order[]>'.
+cypress/component/orders-list.cy.ts(136,7): error TS2353: Object literal may only specify known properties, and 'success' does not exist in type 'ResponseDto<Order[]>'.
+cypress/component/orders-list.cy.ts(155,7): error TS2353: Object literal may only specify known properties, and 'success' does not exist in type 'ResponseDto<Order[]>'.
+cypress/component/orders-list.cy.ts(172,7): error TS2353: Object literal may only specify known properties, and 'success' does not exist in type 'ResponseDto<Order[]>'.
+cypress/component/products.cy.ts(29,7): error TS2353: Object literal may only specify known properties, and 'success' does not exist in type 'ResponseDto<Product[]>'.
+cypress/component/products.cy.ts(64,23): error TS2339: Property 'success' does not exist on type 'ResponseDto<Product[]>'.
+cypress/component/products.cy.ts(94,7): error TS2353: Object literal may only specify known properties, and 'success' does not exist in type 'ResponseDto<Product[]>'.
+cypress/component/products.cy.ts(126,7): error TS2353: Object literal may only specify known properties, and 'success' does not exist in type 'ResponseDto<Product[]>'.
+cypress/security/tasks-security.cy.ts(72,63): error TS2367: This comparison appears to be unintentional because the types '"Completada"' and '"En Progreso"' have no overlap.
+cypress/support/commands.ts(2,31): error TS2307: Cannot find module 'sinon' or its corresponding type declarations.
+cypress/support/component.ts(2,31): error TS2307: Cannot find module 'sinon' or its corresponding type declarations.
+cypress/support/global-types.ts(6,31): error TS2307: Cannot find module 'sinon' or its corresponding type declarations.
+cypress/support/global-types.ts(11,42): error TS2315: Type 'Chainable' is not generic.
+cypress/support/global-types.ts(12,15): error TS2315: Type 'Chainable' is not generic.
+cypress/support/global-types.ts(13,34): error TS2315: Type 'Chainable' is not generic.
+cypress/support/global-types.ts(15,51): error TS2315: Type 'Chainable' is not generic.
+cypress/support/global-types.ts(16,57): error TS2315: Type 'Chainable' is not generic.
+cypress/support/global-types.ts(17,39): error TS2315: Type 'Chainable' is not generic.
+cypress/support/global-types.ts(18,41): error TS2315: Type 'Chainable' is not generic.
+src/app/pages/admin/orders/order-details-dialog/order-details-dialog.ts(36,5): error TS1206: Decorators are not valid here.
+src/app/pages/employee/tasks/employee-tasks/product-detail-dialog/product-detail-dialog.ts(25,5): error TS1206: Decorators are not valid here.

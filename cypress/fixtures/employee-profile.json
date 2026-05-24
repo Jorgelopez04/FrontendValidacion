@@ -1,0 +1,14 @@
+{
+  "success": true,
+  "message": "Employee profile retrieved successfully",
+  "data": {
+    "id_employee": 100,
+    "cc": "987654321",
+    "name": "Ana Pérez",
+    "state": "Activo",
+    "role": {
+      "name": "Empleado"
+    },
+    "tasks": []
+  }
+}
